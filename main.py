@@ -6,11 +6,11 @@ from discord.ext import tasks
 from discord.ext import commands
 
 import asyncio
-import os, re, json
+import os, re, json, time
 import random
 import datetime
 from queue import PriorityQueue
-from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # keys = db.keys()
 # print(keys)
@@ -67,6 +67,7 @@ async def help(ctx):
 
 @bot.command()
 async def 일정(ctx, *inp):
+    sched = BackgroundScheduler()
     user = discord.utils.get(ctx.guild.members, name=ctx.message.author.name)
 
     name = inp[0]
@@ -99,7 +100,12 @@ async def 일정(ctx, *inp):
         await ctx.send(f"{name}, {min}분 남았습니다.")
     else:
         await ctx.send(f"{name}, {hour}시 {min}분 남았습니다.")
-    db["schedule"].put((diff.seconds, f"{name},{channel_id}"))
+    @sched.scheduled_job('cron', hour='12', minute='30', id='test_2')
+    def job2():
+        print(f'job2 : {time.strftime("%H:%M:%S")}')
+    
+    # 이런식으로 추가도 가능. 매분에 실행
+    sched.add_job(job2, 'cron', second='0', id="test_3")
     return 0
 
 # @bot.command()
