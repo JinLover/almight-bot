@@ -68,6 +68,7 @@ async def help(ctx):
 @bot.command()
 async def 일정(ctx, *inp):
     sched = BackgroundScheduler()
+    print("asdasdas")
     user = discord.utils.get(ctx.guild.members, name=ctx.message.author.name)
 
     name = inp[0]
@@ -106,6 +107,10 @@ async def 일정(ctx, *inp):
     
     # 이런식으로 추가도 가능. 매분에 실행
     sched.add_job(job2, 'cron', second='0', id="test_3")
+
+    print('sched before~')
+    sched.start()
+    print('sched after~')
     return 0
 
 # @bot.command()
@@ -234,8 +239,10 @@ async def _clear(ctx, *, amount=1):
     await ctx.channel.purge(limit=amount)
     return 0
 
-"""
-"""
 token = os.environ['token']
 keep_alive()
-bot.run(token)
+
+try:
+    bot.run(token)
+except:
+    os.system("kill 1")
