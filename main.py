@@ -238,7 +238,9 @@ async def _clear(ctx, *, amount=1):
     await ctx.channel.purge(limit=amount)
     return 0
 
+print("now starting!!")
 token = os.environ.get('token')
+print(token)
 bot.run(token)
 # try:
 #     bot.run(token)
