@@ -1,5 +1,3 @@
-from replit import db
-
 import discord
 from discord.ext import tasks
 from discord.ext import commands
@@ -240,7 +238,6 @@ async def _clear(ctx, *, amount=1):
 
 print("now starting!!")
 token = os.environ.get('token')
-print(token)
 bot.run(token)
 # try:
 #     bot.run(token)
