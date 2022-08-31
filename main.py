@@ -1,5 +1,4 @@
 from replit import db
-from keep_alive import keep_alive
 
 import discord
 from discord.ext import tasks
@@ -240,9 +239,8 @@ async def _clear(ctx, *, amount=1):
     return 0
 
 token = os.environ['token']
-keep_alive()
-
-try:
-    bot.run(token)
-except:
-    os.system("kill 1")
+bot.run(token)
+# try:
+#     bot.run(token)
+# except:
+#     os.system("kill 1")
