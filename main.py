@@ -2,12 +2,10 @@ import discord
 from discord.ext import tasks
 from discord.ext import commands
 
-import asyncio
-import os, re, json, time
-import random
-import datetime
+import asyncio, os, re, json, random, datetime
 from queue import PriorityQueue
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 # keys = db.keys()
 # print(keys)
@@ -64,8 +62,7 @@ async def help(ctx):
 
 @bot.command()
 async def 일정(ctx, *inp):
-    sched = BackgroundScheduler()
-    print("asdasdas")
+    scheduler = AsyncIOScheduler(timezone='Asia/Seoul')
     user = discord.utils.get(ctx.guild.members, name=ctx.message.author.name)
 
     name = inp[0]
@@ -93,20 +90,19 @@ async def 일정(ctx, *inp):
     min = (diff.seconds%3600)//60
 
     if diff.seconds < 60:
-        await ctx.send(f"{name}, {diff.seconds}초 남았습니다.")
+        await ctx.send(f"{name}까지 {diff.seconds}초 남았습니다.")
     elif diff.seconds < 3600:
-        await ctx.send(f"{name}, {min}분 남았습니다.")
+        await ctx.send(f"{name}까지 {min}분 남았습니다.")
     else:
-        await ctx.send(f"{name}, {hour}시 {min}분 남았습니다.")
-    @sched.scheduled_job('cron', hour='12', minute='30', id='test_2')
-    def job2():
-        print(f'job2 : {time.strftime("%H:%M:%S")}')
-    
-    # 이런식으로 추가도 가능. 매분에 실행
-    sched.add_job(job2, 'cron', second='0', id="test_3")
+        await ctx.send(f"{name}까지 {hour}시 {min}분 남았습니다.")
+
+    print(reserve)
+    scheduler.add_job(ctx.send, 'date', run_date=reserve, args=[f"[리마인드]{name}"])
+    scheduler.add_job(ctx.send, 'date', run_date=reserve, args=[f"[리마인드]{name}"])
+    # scheduler.remove_job('my_job_id')
 
     print('sched before~')
-    sched.start()
+    scheduler.start()
     print('sched after~')
     return 0
 
@@ -236,10 +232,10 @@ async def _clear(ctx, *, amount=1):
     await ctx.channel.purge(limit=amount)
     return 0
 
-print("now starting!!")
-token = os.environ.get('token')
-bot.run(token)
-# try:
-#     bot.run(token)
-# except:
-#     os.system("kill 1")
+token = os.environ['token']
+keep_alive()
+
+try:
+    bot.run(token)
+except:
+    os.system("kill 1")
