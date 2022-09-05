@@ -7,7 +7,7 @@ def home():
   return "i'm alive"
 
 def run():
-  app.run(host='almight-bot-jinlover.koyeb.app/', port=8080)
+  app.run(host='almight-bot.almight-bot.koyeb', port=8080)
 
 def keep_alive():
   t = Thread(target=run)
