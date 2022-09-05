@@ -4,6 +4,7 @@ from discord.ext import commands
 
 import asyncio, os, re, json, random, datetime
 from queue import PriorityQueue
+from keep_alive import keep_alive
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -234,6 +235,7 @@ async def _clear(ctx, *, amount=1):
 
 print("now starting!!")
 token = os.environ.get('token')
+keep_alive()
 bot.run(token)
 
 # try:
